@@ -14,6 +14,9 @@ x = np.array([[0], [1]])
 
 b = SE2(R=R, x=x)
 
+c = np.array([0,1])
+
 print(a)
 print(b)
 print(a*b)
+print(a*c)

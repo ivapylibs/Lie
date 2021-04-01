@@ -23,17 +23,29 @@ class SE2:
                 raise ValueError("Not a Homogenous matrix")
     
     def getTranslation(self):
-        return self.__M[0:1, 2]
+        return self.__M[0:2, 2][:,np.newaxis]
     
     def getRotation(self):
-        return self.__M[0:1, 0:1]
+        return self.__M[0:2, 0:2]
     
     def getAngle(self):
         return np.arctan2(M[1,0], M[0,0])
 
     def __mul__(self, other):
-        m = np.matmul(self.__M, other.__M)
-        return SE2(M=m)
+        if(type(other) == SE2):
+            print("SE2 Multiplication")
+            m = np.matmul(self.__M, other.__M)
+            return SE2(M=m)
+        elif(type(other) == np.ndarray):
+            print("Projection")
+            if(np.shape(other) == (2,)):
+                vec = np.vstack((other[:, np.newaxis], [1]))
+                return np.matmul(self.__M, vec)[:-1]
+
     
     def __str__(self):
         return str(self.__M)
+
+    @staticmethod
+    def rotationMatrix(theta):
+        return np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
