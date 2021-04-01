@@ -33,11 +33,9 @@ class SE2:
 
     def __mul__(self, other):
         if(type(other) == SE2):
-            print("SE2 Multiplication")
             m = np.matmul(self.__M, other.__M)
             return SE2(M=m)
         elif(type(other) == np.ndarray):
-            print("Projection")
             if(np.shape(other) == (2,)):
                 vec = np.vstack((other[:, np.newaxis], [1]))
                 return np.matmul(self.__M, vec)[:-1]
