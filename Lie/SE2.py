@@ -46,4 +46,4 @@ class SE2:
 
     @staticmethod
     def rotationMatrix(theta):
-        return np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+        return np.squeeze(np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]]))
