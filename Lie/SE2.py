@@ -29,16 +29,26 @@ class SE2:
         return self.__M[0:2, 0:2]
     
     def getAngle(self):
-        return np.arctan2(M[1,0], M[0,0])
+        return np.arctan2(self.__M[1,0], self.__M[0,0])
+    
+    def inv(self):
+        return SE2(M=np.linalg.inv(self.__M))
+
 
     def __mul__(self, other):
         if(type(other) == SE2):
             m = np.matmul(self.__M, other.__M)
             return SE2(M=m)
         elif(type(other) == np.ndarray):
-            if(np.shape(other) == (2,)):
-                vec = np.vstack((other[:, np.newaxis], [1]))
+            if(np.shape(np.squeeze(other)) == (2,)): # Point
+                otherS = np.squeeze(other)
+                vec = np.vstack((otherS[:, np.newaxis], [1]))
                 return np.matmul(self.__M, vec)[:-1]
+            elif(np.shape(np.squeeze(other)) == (3,)): # Velocity
+                L = np.eye(3)
+                L[0:2,0:2] = self.__M[0:2,0:2]
+                return np.matmul(L, other)
+
 
     
     def __str__(self):
