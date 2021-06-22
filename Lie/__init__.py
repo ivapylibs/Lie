@@ -1,2 +1,2 @@
-from .SE2 import SE2
-from .SE3 import SE3
+from .group.SE2 import SE2
+from .group.SE3 import SE3
