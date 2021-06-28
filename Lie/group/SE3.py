@@ -40,7 +40,7 @@ class SE3:
             m = np.matmul(self.__M, other.__M)
             return SE3(M=m)
         elif(type(other) == np.ndarray):
-            if(np.shape(other) == (3,)):
+            if(np.shape(np.squeeze(other)) == (3,)):
                 vec = np.vstack((other[:, np.newaxis], [1]))
                 return np.matmul(self.__M, vec)[:-1]
 
