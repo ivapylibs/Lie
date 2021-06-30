@@ -33,3 +33,5 @@ print(a)
 print(b)
 print(a*b)
 print(a*c)
+
+print(a.log())

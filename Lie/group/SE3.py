@@ -1,5 +1,7 @@
 import numpy as np
+from scipy.linalg import expm
 
+import pdb
 
 class SE3:
     def __init__(self, *args, **kwargs):
@@ -44,9 +46,30 @@ class SE3:
                 vec = np.vstack((other[:, np.newaxis], [1]))
                 return np.matmul(self.__M, vec)[:-1]
 
-    
     def __str__(self):
         return str(self.__M)
+    
+    def inv(self):
+        return SE3(M=np.linalg.inv(self.__M))
+
+    def log(self, tau=1):
+        normw = np.arccos( (np.trace(self.getRotation())-1)/2 ) / tau
+        if (normw == 0):            # If rotation, pure translation.
+            w = np.zeros((3, 1))
+            v = self.M[0:3,3]/tau
+        else:                       # else, use logarithm equation
+            #--(1) First do the log of the rotation matrix.
+            hatw = (normw/(2*np.sin(normw*tau)))*(self.getRotation() - self.getRotation().T)
+            w = np.vstack((hatw[2,1] , hatw[0,2] , hatw[1,0]))
+
+            #--(2) Second, use both hat omega and omega to get the velocity.
+            v = (normw**2)*np.matmul(np.linalg.inv(np.matmul((np.eye(3) - self.getRotation()),hatw) + tau*w*w.T), self.getTranslation())
+        return np.vstack((v, w))
+
+    @staticmethod 
+    def exp(xi, t=1): # xi is a Lie Algebra
+        expMat = expm(xi*t)
+        return SE3(M=expMat)
 
     @staticmethod
     def RotX(theta):
