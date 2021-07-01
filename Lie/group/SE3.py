@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.linalg import expm
+import matplotlib.pyplot as plt
 
 import pdb
 
@@ -45,6 +46,14 @@ class SE3:
             if(np.shape(np.squeeze(other)) == (3,)):
                 vec = np.vstack((other[:, np.newaxis], [1]))
                 return np.matmul(self.__M, vec)[:-1]
+    
+    def plot(self, ax=None, scale=1):
+        o = self.getTranslation()
+        p1 = self*np.array([scale,0,0])
+        p2 = self*np.array([0,scale,0])
+        p3 = self*np.array([0,0,scale])
+        pts = np.hstack((o, p1, o, p2, o, p3))
+        ax.plot(pts[0,:],pts[1,:],pts[2,:], '--')
 
     def __str__(self):
         return str(self.__M)
@@ -56,7 +65,7 @@ class SE3:
         normw = np.arccos( (np.trace(self.getRotation())-1)/2 ) / tau
         if (normw == 0):            # If rotation, pure translation.
             w = np.zeros((3, 1))
-            v = self.M[0:3,3]/tau
+            v = self.__M[np.newaxis, 0:3,3].T/tau
         else:                       # else, use logarithm equation
             #--(1) First do the log of the rotation matrix.
             hatw = (normw/(2*np.sin(normw*tau)))*(self.getRotation() - self.getRotation().T)
@@ -67,7 +76,18 @@ class SE3:
         return np.vstack((v, w))
 
     @staticmethod 
+    def hat(xiVec):
+        omegaHat = np.vstack((np.hstack((0, -xiVec[5], xiVec[4])), np.hstack((xiVec[5], 0, -xiVec[3])), \
+               np.hstack((-xiVec[4], xiVec[3], 0))))
+        #pdb.set_trace()
+        xiHat = np.hstack((omegaHat, xiVec[0:3]))
+        return np.vstack((xiHat, np.array([0,0,0,0])))
+
+    @staticmethod 
     def exp(xi, t=1): # xi is a Lie Algebra
+        if(np.shape(np.squeeze(xi)) == (6,)):
+            xi = SE3.hat(xi)
+        #pdb.set_trace()
         expMat = expm(xi*t)
         return SE3(M=expMat)
 
