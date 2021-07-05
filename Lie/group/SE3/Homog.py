@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 import pdb
 
-class SE3:
+class Homog:
     def __init__(self, *args, **kwargs):
         if(len(kwargs) == 0):
             self.__M = np.eye(4)
@@ -39,9 +39,9 @@ class SE3:
         return (roll, pitch, yaw)
 
     def __mul__(self, other):
-        if(type(other) == SE3):
+        if(type(other) == Homog):
             m = np.matmul(self.__M, other.__M)
-            return SE3(M=m)
+            return Homog(M=m)
         elif(type(other) == np.ndarray):
             if(np.shape(np.squeeze(other)) == (3,)):
                 vec = np.vstack((other[:, np.newaxis], [1]))
@@ -59,7 +59,7 @@ class SE3:
         return str(self.__M)
     
     def inv(self):
-        return SE3(M=np.linalg.inv(self.__M))
+        return Homog(M=np.linalg.inv(self.__M))
 
     def log(self, tau=1):
         normw = np.arccos( (np.trace(self.getRotation())-1)/2 ) / tau
@@ -86,10 +86,10 @@ class SE3:
     @staticmethod 
     def exp(xi, t=1): # xi is a Lie Algebra
         if(np.shape(np.squeeze(xi)) == (6,)):
-            xi = SE3.hat(xi)
+            xi = Homog.hat(xi)
         #pdb.set_trace()
         expMat = expm(xi*t)
-        return SE3(M=expMat)
+        return Homog(M=expMat)
 
     @staticmethod
     def RotX(theta):

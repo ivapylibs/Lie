@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class SE2:
+class Homog:
     def __init__(self, *args, **kwargs):
         if(len(kwargs) == 0):
             self.__M = np.eye(3)
@@ -32,13 +32,13 @@ class SE2:
         return np.arctan2(self.__M[1,0], self.__M[0,0])
     
     def inv(self):
-        return SE2(M=np.linalg.inv(self.__M))
+        return Homog(M=np.linalg.inv(self.__M))
 
 
     def __mul__(self, other):
-        if(type(other) == SE2):
+        if(type(other) == Homog):
             m = np.matmul(self.__M, other.__M)
-            return SE2(M=m)
+            return Homog(M=m)
         elif(type(other) == np.ndarray):
             if(np.shape(np.squeeze(other)) == (2,)): # Point
                 otherS = np.squeeze(other)

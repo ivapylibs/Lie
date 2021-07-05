@@ -1,16 +1,17 @@
+from Lie.group.SE3 import Homog
 import numpy as np
-from Lie import SE2
+import Lie.group.SE2.Homog
 
 theta = np.pi/3
-R = SE2.rotationMatrix(theta)
+R = Lie.group.SE2.Homog.rotationMatrix(theta)
 x = np.array([[1], [0]])
-a = SE2(R=R, x=x)
+a = Lie.group.SE2.Homog(R=R, x=x)
 
 theta = -np.pi/2
-R = SE2.rotationMatrix(theta)
+R = Lie.group.SE2.Homog.rotationMatrix(theta)
 x = np.array([[0], [1]])
 
-b = SE2(R=R, x=x)
+b = Lie.group.SE2.Homog(R=R, x=x)
 
 c = np.array([0,1])
 
