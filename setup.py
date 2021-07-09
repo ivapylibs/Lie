@@ -3,5 +3,6 @@ setup(name='Lie',
       version='1.0',
       description='Classes implementing Lie Groups and Algebras',
       author='Varun Madabushi',
-      packages=['Lie']
+      packages=['Lie'],
+      install_requires=['numpy', 'scipy', 'matplotlib']
       )
