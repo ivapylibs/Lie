@@ -48,7 +48,13 @@ class Homog:
                 L = np.eye(3)
                 L[0:2,0:2] = self.__M[0:2,0:2]
                 return np.matmul(L, other)
-
+            elif np.array(other).ndim == 2 and np.shape(other)[0] == 2: # 2D Matrix with Point
+                vec = np.vstack((other, np.ones((1,np.shape(other)[1]))))
+                return np.matmul(self.__M, vec)[:-1]
+            elif np.array(other).ndim == 2 and np.shape(other)[0] == 3:  # 2D Matrix with Velocity
+                L = np.eye(3)
+                L[0:2, 0:2] = self.__M[0:2, 0:2]
+                return np.matmul(L, other)
 
     
     def __str__(self):

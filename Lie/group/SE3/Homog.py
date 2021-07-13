@@ -43,8 +43,11 @@ class Homog:
             m = np.matmul(self.__M, other.__M)
             return Homog(M=m)
         elif(type(other) == np.ndarray):
-            if(np.shape(np.squeeze(other)) == (3,)):
+            if(np.shape(np.squeeze(other)) == (3,)): # Point in 3D
                 vec = np.vstack((other[:, np.newaxis], [1]))
+                return np.matmul(self.__M, vec)[:-1]
+            elif np.array(other).ndim == 2 and np.shape(other)[0] == 3: # 2D Matrix of Points
+                vec = np.vstack((other, np.ones((1,np.shape(other)[1]))))
                 return np.matmul(self.__M, vec)[:-1]
     
     def plot(self, ax=None, scale=1):
