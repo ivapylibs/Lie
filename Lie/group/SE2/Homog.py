@@ -42,7 +42,7 @@ class Homog:
         """Get the rotation angle
 
         Returns:
-            angle (float):      The rotation angle
+            angle (float):      The rotation angle in radian with the range [-pi, pi]
         """
         return np.arctan2(self.__M[1,0], self.__M[0,0])
     
