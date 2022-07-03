@@ -23,12 +23,27 @@ class Homog:
                 raise ValueError("Not a Homogenous matrix")
     
     def getTranslation(self):
+        """Get the translation vector
+
+        Returns:
+            trl (2, 1):     The column translation vector
+        """
         return self.__M[0:2, 2][:,np.newaxis]
     
     def getRotation(self):
+        """Get the rotation matrix
+
+        Returns:
+            rot_mat (2, 2):     The rotation vector
+        """
         return self.__M[0:2, 0:2]
     
     def getAngle(self):
+        """Get the rotation angle
+
+        Returns:
+            angle (float):      The rotation angle
+        """
         return np.arctan2(self.__M[1,0], self.__M[0,0])
     
     def inv(self):
